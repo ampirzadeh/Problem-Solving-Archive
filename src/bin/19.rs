@@ -1,6 +1,7 @@
 // This is not the most efficient solution, but I was excited to implement a (almost) complete calendar and I wanted to try it out!
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[allow(dead_code)]
 enum WeekDay {
     MONDAY,
     TUESDAY,
@@ -21,6 +22,7 @@ impl WeekDay {
 }
 
 #[derive(Debug, PartialEq, Eq, Copy, Clone)]
+#[allow(dead_code)]
 enum Month {
     JANUARY,
     FEBRUARY,
