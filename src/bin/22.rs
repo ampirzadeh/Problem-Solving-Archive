@@ -8,7 +8,7 @@ fn get_score(name: &str) -> usize {
     score
 }
 
-fn main() -> std::io::Result<()> {
+fn main() {
     // ! Provide file
     let file_contents = fs::read_to_string("./src/bin/names.txt").unwrap();
 
@@ -21,6 +21,4 @@ fn main() -> std::io::Result<()> {
         score_sum += get_score(name) * (i + 1);
     }
     println!("{:?} {}", all_names, score_sum);
-
-    Ok(())
 }
