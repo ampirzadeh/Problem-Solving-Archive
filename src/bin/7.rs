@@ -14,6 +14,7 @@ fn main() {
         for prime in &found_primes {
             if to_check_if_prime % prime == 0 {
                 is_prime = false;
+                break;
             }
         }
 
@@ -24,5 +25,5 @@ fn main() {
         to_check_if_prime += 2;
     }
 
-    println!("{}", found_primes.get(found_primes.len() - 1).unwrap())
+    println!("{}", found_primes.get(found_primes.len() - 1).unwrap());
 }

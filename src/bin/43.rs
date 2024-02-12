@@ -1,28 +1,3 @@
-fn next_permutation<T: Ord>(array: &mut [T]) -> bool {
-    // Find non-increasing suffix
-    if array.is_empty() {
-        return false;
-    }
-    let mut i: usize = array.len() - 1;
-    while i > 0 && array[i - 1] >= array[i] {
-        i -= 1;
-    }
-    if i == 0 {
-        return false;
-    }
-
-    // Find successor to pivot
-    let mut j: usize = array.len() - 1;
-    while array[j] <= array[i - 1] {
-        j -= 1;
-    }
-    array.swap(i - 1, j);
-
-    // Reverse suffix
-    array[i..].reverse();
-    true
-}
-
 fn is_valid(num: &[u16]) -> bool {
     let mut d2d3d4 = 0;
     let mut d3d4d5 = 0;
@@ -93,7 +68,7 @@ fn main() {
     let mut arr = [1, 0, 2, 3, 4, 5, 6, 7, 8, 9];
     let mut sum = 0;
 
-    while next_permutation(&mut arr) {
+    while amplib::next_permutation(&mut arr) {
         if is_valid(&arr) {
             sum += arr
                 .map(|x| x.to_string())

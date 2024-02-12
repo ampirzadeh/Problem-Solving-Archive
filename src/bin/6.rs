@@ -12,8 +12,7 @@ fn main() {
 
     for i in 1..until {
         for j in (i+1)..(until + 1) {
-            println!("{}*{}", i, j);
-            sum += i * j
+            sum += i * j;
         }
     }
 

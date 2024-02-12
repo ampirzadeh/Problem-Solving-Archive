@@ -1,20 +1,8 @@
-fn find_divisors(n: usize) -> Vec<usize> {
-    let mut divs = Vec::new();
-    for i in 1..((n as f64).sqrt() + 1f64) as usize {
-        if n % i == 0 {
-            divs.push(i);
-            if i != n / i {
-                divs.push(n / i);
-            }
-        }
-    }
-    divs
-}
-
+// TODO significant room for performance improvements
 fn main() {
-    let mut abundant_numbers: Vec<usize> = Vec::new();
+    let mut abundant_numbers: Vec<u64> = Vec::new();
     for i in 1..28123 {
-        if i > 1 && find_divisors(i).iter().sum::<usize>() - i > i {
+        if i > 1 && amplib::factorisation(i).iter().sum::<u64>() - i > i {
             abundant_numbers.push(i);
         }
     }

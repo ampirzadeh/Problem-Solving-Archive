@@ -1,3 +1,10 @@
 fn main() {
-    println!("{}", 2 * 3 * 2 * 5 * 7 * 2 * 3 * 11 * 13 * 2 * 17 * 19);
+    let mut n = 1;
+    let until = 20;
+
+    for i in 2..(until + 1) {
+        n = amplib::lcm(n, i);
+    }
+
+    println!("{n}");
 }

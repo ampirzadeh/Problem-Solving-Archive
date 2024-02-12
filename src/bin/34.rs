@@ -1,4 +1,5 @@
 fn main() {
+    let mut sum = 0;
     let mut factorials = [1; 10];
     for i in 1..10 {
         factorials[i] = factorials[i - 1] * i;
@@ -12,8 +13,10 @@ fn main() {
             j /= 10;
         }
         if fact_sum == i {
-            println!("{fact_sum}");
+            sum += fact_sum;
         }
         i += 1;
     }
+
+    println!("{sum}");
 }

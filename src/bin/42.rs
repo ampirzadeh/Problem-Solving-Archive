@@ -2,7 +2,7 @@ use std::fs;
 
 fn is_triangle(x: u64) -> bool {
     let n = ((8 * x + 1) as f64).sqrt();
-    return n == n.trunc();
+    n == n.trunc()
 }
 
 fn main() {

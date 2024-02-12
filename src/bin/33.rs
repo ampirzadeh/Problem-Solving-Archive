@@ -29,15 +29,6 @@ fn cancel_wrongly(numerator: u32, denominator: u32) -> f64 {
     }
 }
 
-
-// To simplify the fraction
-fn gcd(x: u32, y: u32) -> u32 {
-    if y == 0 {
-        return x;
-    }
-    return gcd(y, x % y);
-}
-
 fn main() {
     let mut result_numerator = 1;
     let mut result_denominator = 1;
@@ -55,6 +46,6 @@ fn main() {
         }
     }
 
-    let gcd = gcd(result_numerator, result_denominator);
+    let gcd = amplib::gcd(result_numerator, result_denominator);
     println!("{}/{}", result_numerator / gcd, result_denominator / gcd);
 }

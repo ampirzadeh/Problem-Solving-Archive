@@ -83,7 +83,6 @@ fn main() {
     // diag y=-x
     for (x, row) in nums[..nums.len()-3].iter().enumerate() {
         for (y, _col) in row[..nums.len()-3].iter().enumerate() {
-            // println!("{} {} {} {} ", nums[x][y], nums[x+1][y+1], nums[x+2][y+2], nums[x+3][y+3]);
             m = cmp::max(m, nums[x][y] * nums[x+1][y+1] * nums[x+2][y+2] * nums[x+3][y+3]);
 
         }
