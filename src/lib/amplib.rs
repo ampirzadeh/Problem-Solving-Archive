@@ -1,3 +1,5 @@
+use num::{BigInt, FromPrimitive};
+
 pub fn factorisation(n: u64) -> Vec<u64> {
     let mut factors = Vec::new();
     for i in 1..((n as f64).sqrt() + 1f64).ceil() as u64 {
@@ -55,6 +57,34 @@ pub fn prime_factors(n: u64) -> Vec<u64> {
 
 pub fn is_palindrome(txt: String) -> bool {
     txt.chars().rev().collect::<String>() == txt
+}
+
+pub fn order_of_magnitude(n: u64) -> u64 {
+    let mut power = 10;
+    let mut count = 1;
+    while n >= power {
+        count += 1;
+        if let Some(new_power) = power.checked_mul(10) {
+            power = new_power;
+        } else {
+            break;
+        }
+    }
+    count
+}
+
+pub fn order_of_magnitude_bigint(n: &BigInt) -> u64 {
+    let mut power = BigInt::from_i32(10).unwrap();
+    let mut count = 1;
+    while n.ge(&power) {
+        count += 1;
+        if let Some(new_power) = power.checked_mul(&BigInt::from_i32(10).unwrap()) {
+            power = new_power;
+        } else {
+            break;
+        }
+    }
+    count
 }
 
 pub fn lcm(n1: u64, n2: u64) -> u64 {
