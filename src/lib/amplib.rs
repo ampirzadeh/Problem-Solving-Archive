@@ -121,16 +121,19 @@ pub fn is_n_digit_pandigital(n: u64) -> bool {
     true
 }
 
+// T(n)=(n^2+n)/2=N => n^2+n-2N=0 => n=1/2 (sqrt(8N+1)-1)
 pub fn is_triangle(x: u64) -> bool {
     let n = (((8 * x + 1) as f64).sqrt() - 1f64) / 2f64;
     n == n.trunc()
 }
 
+// P(n)=(3n^2+n)/2=N => 3n^2-n-2N=0 => n=1/6 (sqrt(24N+1)+1)
 pub fn is_pentagonal(x: u64) -> bool {
     let n = (((24 * x + 1) as f64).sqrt() + 1f64) / 6f64;
     n == n.trunc()
 }
 
+// H(n)=(2n^2-n)=N => 2n^2-n-N=0 => n=1/4 (sqrt(8N+1)+1)
 pub fn is_hexagonal(x: u64) -> bool {
     let n = (((8 * x + 1) as f64).sqrt() + 1f64) / 4f64;
     n == n.trunc()
