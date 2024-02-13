@@ -8,3 +8,6 @@ edition = "2021"
 [lib]
 name = "amplib"
 path = "src/lib/amplib.rs"
+
+[dependencies]
+num = "0.4.1"
