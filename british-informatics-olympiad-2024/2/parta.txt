@@ -1,0 +1,46 @@
+print("AmirMohammad Pirzadeh")
+print("Poole highschool")
+
+from mutil import Combine, ESet, OSet, TSet
+import re
+
+txt, idx = input().split(" ")
+
+def CombineMulti(items: [str]) -> str:
+    res = items
+    while (len(res) >= 2):
+        res[0] = "Combine(" + items[0] + "," + items[1] + ")"
+        res.pop(1)
+    return "".join(items)
+
+txt = list(txt)
+while (len(txt) >= 2):
+    if (txt[1] != "("):
+        txt[0] = CombineMulti([txt[0], txt[1]])
+        txt.pop(1)
+    if (len(txt) == 1):
+        break
+    if (txt[1] == "("):
+        txt[1] = CombineMulti(txt[2:txt.index(")")])
+        for i in range(2, txt.index(")") + 1):
+            txt.pop(2)
+        
+
+txt = "".join(txt).replace("E", "ESet").replace("T", "TSet").replace("O", "OSet")
+print(eval(txt + "(" + idx + ")"))
+
+# txt = txt.replace("(", "[")
+# txt = txt.replace(")", "]")
+# bracketContents = re.findall("\[[O|E|T]+\]", txt)
+# for bracketContent in bracketContents:
+#     res = ""
+#     for letter in range(1, len(bracketContent) - 1, 2):
+#         res += CombineTwo(bracketContent[letter], bracketContent[letter + 1])
+#     print(res)
+
+# print(CombineMulti(["O", "E", "T", "E"]))
+
+
+# print(CombineTwo("E", "O"))
+# print(Combine(Even, Combine(Odd,Even))(2))
+# print(TSet(11))
