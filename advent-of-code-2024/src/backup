@@ -1,0 +1,134 @@
+
+use std::{collections::HashSet, ops};
+
+use advent_of_code_2024::Solution;
+
+pub struct Day6 {
+    pub input: String,
+}
+
+#[derive(Clone, Eq, PartialEq, Hash, Debug)]
+struct Coord {
+    row: i32,
+    col: i32,
+}
+
+impl Coord {
+    fn new(row: i32, col: i32) -> Self {
+        Self { row, col }
+    }
+}
+
+impl ops::Add<Coord> for Coord {
+    type Output = Coord;
+
+    fn add(self, _rhs: Coord) -> Coord {
+        Coord::new(_rhs.row + self.row, _rhs.col + self.col)
+    }
+}
+
+fn is_guard(c: char) -> bool {
+    ['>', '<', '^', 'v'].contains(&c)
+}
+
+fn get_forward_direction(dir: char) -> Coord {
+    return match dir {
+        '>' => Coord::new(0, 1),
+        '<' => Coord::new(0, -1),
+        'v' => Coord::new(1, 0),
+        '^' => Coord::new(-1, 0),
+        _ => Coord::new(0, 0),
+    };
+}
+
+fn get_turned_direction(dir: char) -> Coord {
+    return match dir {
+        '>' => Coord::new(0, 1),
+        '<' => Coord::new(0, -1),
+        'v' => Coord::new(1, 0),
+        '^' => Coord::new(-1, 0),
+        _ => Coord::new(0, 0),
+    };
+}
+
+fn get_coord(matrix: &Vec<Vec<char>>, coord: &Coord) -> Option<char> {
+    let row: usize = coord.row.try_into().ok()?;
+    let col: usize = coord.col.try_into().ok()?;
+
+    matrix.get(row)?.get(col).copied()
+}
+
+impl Solution for Day6 {
+    fn part1(&self) -> i32 {
+        let mut matrix: Vec<Vec<char>> = self
+            .input
+            .split('\n')
+            .map(|x| x.chars().collect())
+            .collect();
+
+        let mut current_pos: Coord = Coord::new(0, 0);
+
+        for (row_idx, row) in matrix.iter().enumerate() {
+            for (col_idx, &value) in row.iter().enumerate() {
+                if is_guard(value) {
+                    current_pos =
+                        Coord::new(row_idx.try_into().unwrap(), col_idx.try_into().unwrap());
+                }
+            }
+        }
+
+        let mut visited_coords: HashSet<Coord> = HashSet::new();
+
+        while let Some(current_char) = get_coord(&matrix, &current_pos) {
+            let front_pos = current_pos.clone() + get_forward_direction(current_char);
+
+            let next_pos: Coord;
+            if let Some(front_char) = get_coord(&matrix, &front_pos) {
+                if front_char == '.' {
+                    next_pos = current_pos.clone() + get_forward_direction(current_char);
+
+                    println!("currently at {:?}, facing: {:?}, infront: {:?} which is {:?}, going to go: {:?}",
+                                                                    current_pos,
+                                                                    current_char,
+                                                                    next_pos,
+                                                                    get_coord(&matrix, &next_pos),
+                                                                    get_forward_direction(current_char)
+                                                                        );
+
+                    matrix[TryInto::<usize>::try_into(next_pos.row).unwrap()]
+                        [TryInto::<usize>::try_into(next_pos.col).unwrap()] = current_char;
+                } else {
+                    next_pos = current_pos.clone() + get_turned_direction(current_char);
+
+                    println!("currently at {:?}, facing: {:?}, infront: {:?} which is {:?}, going to go: {:?}",
+                                                                current_pos,
+                                                                current_char,
+                                                                next_pos,
+                                                                get_coord(&matrix, &next_pos),
+                                                                get_turned_direction(current_char)
+                                                                    );
+
+                    matrix[TryInto::<usize>::try_into(next_pos.row).unwrap()]
+                        [TryInto::<usize>::try_into(next_pos.col).unwrap()] = match current_char {
+                        '>' => 'v',
+                        '<' => '^',
+                        '^' => '>',
+                        'v' => '<',
+                        _ => ' ',
+                    }
+                }
+
+                current_pos = next_pos;
+                visited_coords.insert(current_pos.clone());
+            } else {
+                break;
+            }
+        }
+
+        visited_coords.len().try_into().unwrap()
+    }
+
+    fn part2(&self) -> i32 {
+        0
+    }
+}
