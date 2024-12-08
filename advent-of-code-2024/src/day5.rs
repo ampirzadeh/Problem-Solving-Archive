@@ -1,109 +1,102 @@
+use std::collections::HashMap;
+
 use advent_of_code_2024::Solution;
+use itertools::Itertools;
 
 pub struct Day5 {
     pub input: String,
 }
 
 impl Day5 {
-    fn get_matrix(&self) -> Vec<Vec<char>> {
-        self.input
-            .split("\n")
-            .map(|x| x.chars().collect())
-            .collect()
+    fn get_precedence_rules(&self) -> HashMap<&str, Vec<&str>> {
+        // 47 -> [53, 13, 61]
+        let mut precedence_rules: HashMap<&str, Vec<&str>> = HashMap::new();
+
+        for line in self.input.split('\n') {
+            if let Some((n1, n2)) = line.split_once('|') {
+                precedence_rules
+                    .entry(n1)
+                    .and_modify(|x| {
+                        x.push(n2);
+                    })
+                    .or_insert(vec![n2]);
+            } else {
+                break;
+            }
+        }
+
+        precedence_rules
+    }
+
+    fn is_valid_duo(&self, n1: &str, n2: &str) -> bool {
+        if let Some(must_come_before) = self.get_precedence_rules().get(n2) {
+            return !must_come_before.contains(&n1);
+        }
+        true
+    }
+
+    fn is_valid_nums(&self, nums: &Vec<&str>) -> bool {
+        for i in 0..nums.len() {
+            for j in (i + 1)..nums.len() {
+                if !self.is_valid_duo(nums[i], nums[j]) {
+                    return false;
+                }
+            }
+        }
+        true
     }
 }
 
 impl Solution for Day5 {
     fn part1(&self) -> i32 {
-        let matrix = &self.get_matrix();
-        let height = matrix.len();
-        let width = matrix[0].len();
+        let mut valid_sum: i32 = 0;
 
-        let mut diag_down = String::from("");
-        for row_idx in 0..(height - 3) {
-            for col_idx in 0..(width - 3) {
-                diag_down.push_str(
-                    format!(
-                        "{}{}{}{} ",
-                        matrix[row_idx][col_idx],
-                        matrix[row_idx + 1][col_idx + 1],
-                        matrix[row_idx + 2][col_idx + 2],
-                        matrix[row_idx + 3][col_idx + 3]
-                    )
-                    .as_str(),
-                );
+        for line in self.input.split('\n') {
+            if line.is_empty() || line.contains('|') {
+                continue;
+            }
+
+            let nums: Vec<&str> = line.split(",").collect();
+            if self.is_valid_nums(&nums) {
+                valid_sum += nums[(nums.len() - 1) / 2].parse::<i32>().unwrap();
             }
         }
 
-        let mut diag_up = String::from("");
-        for row_idx in 3..height {
-            for col_idx in 0..(width - 3) {
-                diag_up.push_str(
-                    format!(
-                        "{}{}{}{} ",
-                        matrix[row_idx][col_idx],
-                        matrix[row_idx - 1][col_idx + 1],
-                        matrix[row_idx - 2][col_idx + 2],
-                        matrix[row_idx - 3][col_idx + 3]
-                    )
-                    .as_str(),
-                );
-            }
-        }
-
-        let mut vertical = String::from("");
-        for row_idx in 0..(height - 3) {
-            for col_idx in 0..width {
-                vertical.push_str(
-                    format!(
-                        "{}{}{}{} ",
-                        matrix[row_idx][col_idx],
-                        matrix[row_idx + 1][col_idx],
-                        matrix[row_idx + 2][col_idx],
-                        matrix[row_idx + 3][col_idx]
-                    )
-                    .as_str(),
-                );
-            }
-        }
-
-        let mut counter = 0;
-        counter += vertical.matches("XMAS").count();
-        counter += vertical.matches("SAMX").count();
-        counter += diag_up.matches("SAMX").count();
-        counter += diag_up.matches("XMAS").count();
-        counter += diag_down.matches("XMAS").count();
-        counter += diag_down.matches("SAMX").count();
-        counter += self.input.matches("XMAS").count();
-        counter += self.input.matches("SAMX").count();
-        counter.try_into().unwrap()
+        valid_sum
     }
 
     fn part2(&self) -> i32 {
-        let matrix = &self.get_matrix();
-        let height = matrix.len();
-        let width = matrix[0].len();
+        let mut valid_sum: i32 = 0;
 
-        let mut counter = 0;
-        for i in 1..(height - 1) {
-            for j in 1..(width - 1) {
-                if matrix[i][j] == 'A' {
-                    let bottom_right_diag =
-                        format!("{}{}", matrix[i - 1][j - 1], matrix[i + 1][j + 1]);
-                    let top_right_diag =
-                        format!("{}{}", matrix[i - 1][j + 1], matrix[i + 1][j - 1]);
+        for line in self.input.split('\n') {
+            if line.is_empty() || line.contains('|') {
+                continue;
+            }
 
-                    if bottom_right_diag.contains("M")
-                        && bottom_right_diag.contains("S")
-                        && top_right_diag.contains("M")
-                        && top_right_diag.contains("S")
-                    {
-                        counter += 1;
+            let mut nums: Vec<&str> = line.split(",").collect();
+            if self.is_valid_nums(&nums) {
+                continue;
+            }
+
+            loop {
+                let mut should_continue = false;
+
+                for i in 0..nums.len() {
+                    for j in (i + 1)..nums.len() {
+                        if !self.is_valid_duo(nums[i], nums[j]) {
+                            should_continue = true;
+                            nums.swap(i, j); // bubble sort-ish
+                        }
                     }
+                }
+
+                if should_continue == false {
+                    valid_sum += nums[(nums.len() - 1) / 2].parse::<i32>().unwrap();
+                    break;
                 }
             }
         }
 
-        counter.try_into().unwrap()
+        valid_sum
     }
 }
