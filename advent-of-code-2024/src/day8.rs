@@ -1,67 +1,151 @@
-use std::collections::HashMap;
+use std::{
+    char,
+    collections::{HashMap, HashSet},
+};
 
-use advent_of_code_2024::Solution;
+use advent_of_code_2024::{Point, Solution};
 
 pub struct Day8 {
     pub input: String,
 }
 
 impl Day8 {
-    fn get_numbers(line: &str) -> (i128, i128) {
-        let nums = line
-            .split_whitespace()
-            .map(|x| x.parse::<i128>().unwrap())
-            .collect::<Vec<i128>>();
-        (nums[0], nums[1])
+    fn get_stations(&self, matrix: Vec<Vec<char>>) -> HashMap<char, Vec<Point>> {
+        let height = matrix.len();
+        let width = matrix[0].len();
+
+        let mut frequency_station_mapper: HashMap<char, Vec<Point>> = HashMap::new();
+        for i in 0..height {
+            for j in 0..width {
+                let chr = matrix[i][j];
+                if chr == '.' {
+                    continue;
+                }
+
+                let pos = Point::new(i.try_into().unwrap(), j.try_into().unwrap());
+                frequency_station_mapper
+                    .entry(chr)
+                    .and_modify(|x| {
+                        x.push(pos);
+                    })
+                    .or_insert(vec![pos]);
+            }
+        }
+        frequency_station_mapper
+    }
+
+    fn get_antinodes(&self, stations: Vec<Point>, max_height: i128, max_width: i128) -> Vec<Point> {
+        let mut res = vec![];
+
+        for i in 0..stations.len() {
+            for j in (i + 1)..stations.len() {
+                let diff = stations[i] - stations[j];
+
+                let a = stations[i] + diff;
+                if !(a.x >= max_height || a.x < 0 || a.y >= max_width || a.y < 0) {
+                    res.push(a);
+                }
+
+                let b = stations[j] - diff;
+                if !(b.x >= max_height || b.x < 0 || b.y >= max_width || b.y < 0) {
+                    res.push(b);
+                }
+            }
+        }
+
+        res
+    }
+
+    fn get_antinodes_with_repeats(
+        &self,
+        stations: Vec<Point>,
+        max_height: i128,
+        max_width: i128,
+    ) -> Vec<Point> {
+        let mut res = vec![];
+
+        for i in 0..stations.len() {
+            for j in (i + 1)..stations.len() {
+                let diff = stations[i] - stations[j];
+
+                let mut diff_coefficient = 1;
+                loop {
+                    let a = stations[i] + diff * diff_coefficient;
+                    if a.x >= max_height || a.x < 0 {
+                        break;
+                    }
+                    if a.y >= max_width || a.y < 0 {
+                        break;
+                    }
+
+                    res.push(a);
+                    diff_coefficient += 1;
+                }
+
+                diff_coefficient = 1;
+                loop {
+                    let a = stations[j] - diff * diff_coefficient;
+                    if a.x >= max_height || a.x < 0 {
+                        break;
+                    }
+                    if a.y >= max_width || a.y < 0 {
+                        break;
+                    }
+
+                    res.push(a);
+                    diff_coefficient += 1;
+                }
+            }
+        }
+
+        res.extend(stations);
+
+        res
     }
 }
 
 impl Solution for Day8 {
     fn part1(&self) -> i128 {
-        let mut first_set: Vec<i128> = Vec::new();
-        let mut second_set: Vec<i128> = Vec::new();
+        let matrix: Vec<Vec<char>> = self
+            .input
+            .split("\n")
+            .map(|x| x.chars().collect())
+            .collect();
+        let height: i128 = matrix.len().try_into().unwrap();
+        let width: i128 = matrix[0].len().try_into().unwrap();
 
-        for line in self.input.split("\n") {
-            let nums = Self::get_numbers(line);
+        let mut antinode_locations: HashSet<Point> = HashSet::new();
 
-            first_set.push(nums.0);
-            second_set.push(nums.1);
+        let frequency_station_mapper = self.get_stations(matrix);
+
+        for (_, station_coordinates) in frequency_station_mapper.iter() {
+            for f in self.get_antinodes(station_coordinates.to_vec(), height, width) {
+                antinode_locations.insert(f);
+            }
         }
 
-        first_set.sort();
-        second_set.sort();
-
-        let mut sum = 0;
-        for i in 0..(first_set.len()) {
-            sum += (first_set[i]).abs_diff(second_set[i]);
-        }
-
-        sum.try_into().unwrap()
+        antinode_locations.len().try_into().unwrap()
     }
 
     fn part2(&self) -> i128 {
-        let mut first_set: Vec<i128> = Vec::new();
-        let mut second_set: Vec<i128> = Vec::new();
+        let matrix: Vec<Vec<char>> = self
+            .input
+            .split("\n")
+            .map(|x| x.chars().collect())
+            .collect();
+        let height: i128 = matrix.len().try_into().unwrap();
+        let width: i128 = matrix[0].len().try_into().unwrap();
 
-        for line in self.input.split("\n") {
-            let nums = Self::get_numbers(line);
+        let mut antinode_locations: HashSet<Point> = HashSet::new();
 
-            first_set.push(nums.0);
-            second_set.push(nums.1);
+        let frequency_station_mapper = self.get_stations(matrix);
+
+        for (_, station_coordinates) in frequency_station_mapper.iter() {
+            for f in self.get_antinodes_with_repeats(station_coordinates.to_vec(), height, width) {
+                antinode_locations.insert(f);
+            }
         }
 
-        let mut frequency_map: HashMap<i128, i128> = HashMap::new();
-
-        for num in second_set {
-            *frequency_map.entry(num).or_insert(0) += 1;
-        }
-
-        let mut sum = 0;
-
-        for num in first_set {
-            sum += num * frequency_map.get(&num).unwrap_or(&0i128);
-        }
-
-        sum
+        antinode_locations.len().try_into().unwrap()
     }
 }
