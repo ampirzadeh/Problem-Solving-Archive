@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{cmp::Ordering, collections::HashMap};
 
 use advent_of_code_2024::Solution;
 
@@ -77,23 +77,35 @@ impl Solution for Day5 {
                 continue;
             }
 
-            loop {
-                let mut should_continue = false;
-
-                for i in 0..nums.len() {
-                    for j in (i + 1)..nums.len() {
-                        if !self.is_valid_duo(nums[i], nums[j]) {
-                            should_continue = true;
-                            nums.swap(i, j); // bubble sort-ish
-                        }
-                    }
+            // i did the whole bubble sort implementation and only then did i think to look for the
+            // rust equivalent to js .sort()
+            nums.sort_by(|a, b| {
+                if self.is_valid_duo(a, b) {
+                    Ordering::Greater
+                } else {
+                    Ordering::Less
                 }
+            });
 
-                if should_continue == false {
-                    valid_sum += nums[(nums.len() - 1) / 2].parse::<i128>().unwrap();
-                    break;
-                }
-            }
+            //loop {
+            //    let mut should_continue = false;
+            //
+            //    for i in 0..nums.len() {
+            //        for j in (i + 1)..nums.len() {
+            //            if !self.is_valid_duo(nums[i], nums[j]) {
+            //                should_continue = true;
+            //                nums.swap(i, j); // bubble sort-ish
+            //            }
+            //        }
+            //    }
+            //
+            //    if should_continue == false {
+            //        valid_sum += nums[(nums.len() - 1) / 2].parse::<i128>().unwrap();
+            //        break;
+            //    }
+            //}
+
+            valid_sum += nums[(nums.len() - 1) / 2].parse::<i128>().unwrap();
         }
 
         valid_sum
