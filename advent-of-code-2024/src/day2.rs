@@ -5,8 +5,8 @@ pub struct Day2 {
 }
 
 impl Day2 {
-    fn is_valid_report(report: &Vec<i32>) -> bool {
-        let mut differences: Vec<i32> = Vec::new();
+    fn is_valid_report(report: &Vec<i128>) -> bool {
+        let mut differences: Vec<i128> = Vec::new();
 
         for i in 1..report.len() {
             let first = report[i - 1];
@@ -21,13 +21,13 @@ impl Day2 {
 }
 
 impl Solution for Day2 {
-    fn part1(&self) -> i32 {
+    fn part1(&self) -> i128 {
         let mut valid_counter = 0;
 
         for line in self.input.split("\n") {
             let report = line
                 .split_whitespace()
-                .map(|x| x.parse::<i32>().unwrap())
+                .map(|x| x.parse::<i128>().unwrap())
                 .collect();
 
             if Self::is_valid_report(&report) {
@@ -38,22 +38,22 @@ impl Solution for Day2 {
         valid_counter
     }
 
-    fn part2(&self) -> i32 {
+    fn part2(&self) -> i128 {
         let mut valid_counter = 0;
 
         for line in self.input.split("\n") {
-            let report: Vec<i32> = line
+            let report: Vec<i128> = line
                 .split_whitespace()
-                .map(|x| x.parse::<i32>().unwrap())
+                .map(|x| x.parse::<i128>().unwrap())
                 .collect();
             if Self::is_valid_report(&report) {
                 valid_counter += 1;
                 continue;
             }
 
-            let mut subreports: Vec<Vec<i32>> = Vec::new();
+            let mut subreports: Vec<Vec<i128>> = Vec::new();
             for i in 0..report.len() {
-                let subset: Vec<i32> = report
+                let subset: Vec<i128> = report
                     .iter()
                     .enumerate()
                     .filter(|&(index, _)| index != i)

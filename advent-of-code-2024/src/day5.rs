@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
 use advent_of_code_2024::Solution;
-use itertools::Itertools;
 
 pub struct Day5 {
     pub input: String,
@@ -48,8 +47,8 @@ impl Day5 {
 }
 
 impl Solution for Day5 {
-    fn part1(&self) -> i32 {
-        let mut valid_sum: i32 = 0;
+    fn part1(&self) -> i128 {
+        let mut valid_sum: i128 = 0;
 
         for line in self.input.split('\n') {
             if line.is_empty() || line.contains('|') {
@@ -58,15 +57,15 @@ impl Solution for Day5 {
 
             let nums: Vec<&str> = line.split(",").collect();
             if self.is_valid_nums(&nums) {
-                valid_sum += nums[(nums.len() - 1) / 2].parse::<i32>().unwrap();
+                valid_sum += nums[(nums.len() - 1) / 2].parse::<i128>().unwrap();
             }
         }
 
         valid_sum
     }
 
-    fn part2(&self) -> i32 {
-        let mut valid_sum: i32 = 0;
+    fn part2(&self) -> i128 {
+        let mut valid_sum: i128 = 0;
 
         for line in self.input.split('\n') {
             if line.is_empty() || line.contains('|') {
@@ -91,7 +90,7 @@ impl Solution for Day5 {
                 }
 
                 if should_continue == false {
-                    valid_sum += nums[(nums.len() - 1) / 2].parse::<i32>().unwrap();
+                    valid_sum += nums[(nums.len() - 1) / 2].parse::<i128>().unwrap();
                     break;
                 }
             }

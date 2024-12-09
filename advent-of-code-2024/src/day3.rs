@@ -7,7 +7,7 @@ pub struct Day3 {
 }
 
 impl Day3 {
-    fn mul(line: &String) -> i32 {
+    fn mul(line: &String) -> i128 {
         // using capture groups in regex was really helpful in 2023 as well, for day 2 for instance
         let re = Regex::new(r"mul\((?<first>\d{1,3}),(?<second>\d{1,3})\)").unwrap();
 
@@ -16,8 +16,8 @@ impl Day3 {
         for cap in re.captures_iter(line.as_str()) {
             if let Some(first) = cap.name("first") {
                 if let Some(second) = cap.name("second") {
-                    sum += first.as_str().parse::<i32>().unwrap()
-                        * second.as_str().parse::<i32>().unwrap();
+                    sum += first.as_str().parse::<i128>().unwrap()
+                        * second.as_str().parse::<i128>().unwrap();
                 }
             }
         }
@@ -27,11 +27,11 @@ impl Day3 {
 }
 
 impl Solution for Day3 {
-    fn part1(&self) -> i32 {
+    fn part1(&self) -> i128 {
         Self::mul(&self.input)
     }
 
-    fn part2(&self) -> i32 {
+    fn part2(&self) -> i128 {
         let mut sum = 0;
 
         let dont_sections: Vec<&str> = self.input.split("don't()").collect();
