@@ -5,7 +5,7 @@ pub struct Day4 {
 }
 
 impl Solution for Day4 {
-    fn part1(&self) -> i32 {
+    fn part1(&self) -> i128 {
         let rows: Vec<Vec<char>> = self
             .input
             .split("\n")
@@ -74,7 +74,7 @@ impl Solution for Day4 {
         counter.try_into().unwrap()
     }
 
-    fn part2(&self) -> i32 {
+    fn part2(&self) -> i128 {
         let rows: Vec<Vec<char>> = self
             .input
             .split("\n")

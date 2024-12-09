@@ -5,7 +5,7 @@ pub struct Day9 {
 }
 
 impl Solution for Day9 {
-    fn part1(&self) -> i32 {
+    fn part1(&self) -> i128 {
         let mut decompressed_string: Vec<String> = vec![];
 
         let mut current_file_id = 0;
@@ -45,11 +45,11 @@ impl Solution for Day9 {
             decompressed_string[back_ptr] = freespace.clone();
         }
 
-        let mut calculated_checksum: u128 = 0;
+        let mut calculated_checksum: i128 = 0;
 
         for i in 0..decompressed_string.len() {
-            if let Ok(num) = decompressed_string[i].parse::<u128>() {
-                calculated_checksum += (i as u128) * num;
+            if let Ok(num) = decompressed_string[i].parse::<i128>() {
+                calculated_checksum += (i as i128) * num;
             }
         }
 
@@ -57,7 +57,7 @@ impl Solution for Day9 {
         0
     }
 
-    fn part2(&self) -> i32 {
+    fn part2(&self) -> i128 {
         1
     }
 }

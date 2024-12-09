@@ -1,10 +1,6 @@
 use advent_of_code_2024::Solution;
-use itertools::{iproduct, Itertools};
-use std::{
-    collections::VecDeque,
-    iter::{repeat, Filter},
-    string,
-};
+use itertools::Itertools;
+use std::{collections::VecDeque, iter::repeat};
 
 pub struct Day7 {
     pub input: String,
@@ -30,7 +26,7 @@ impl Day7 {
 }
 
 impl Solution for Day7 {
-    fn part1(&self) -> i32 {
+    fn part1(&self) -> i128 {
         let mut valid_sum = 0;
 
         for line in self.input.split("\n") {
@@ -65,7 +61,7 @@ impl Solution for Day7 {
         0
     }
 
-    fn part2(&self) -> i32 {
+    fn part2(&self) -> i128 {
         let mut valid_sum = 0;
 
         for line in self.input.split("\n") {
