@@ -2,12 +2,23 @@ use advent_of_code_2024::Solution;
 use itertools::Itertools;
 use std::{collections::VecDeque, iter::repeat};
 
+#[derive(Clone, PartialEq, Debug)]
+enum MyOperators {
+    Add,
+    Multiply,
+    Connect,
+}
+
 pub struct Day7 {
     pub input: String,
 }
 
 impl Day7 {
-    fn evaluate_ltr(nums: VecDeque<i64>, operators: VecDeque<char>) -> i64 {
+    fn concat(a: i128, b: i128) -> i128 {
+        a as i128 * 10i128.pow(b.ilog10() + 1) + b as i128
+    }
+
+    fn evaluate_ltr(nums: VecDeque<i128>, operators: VecDeque<MyOperators>) -> i128 {
         let mut nums = nums;
         let mut operators = operators;
 
@@ -15,13 +26,48 @@ impl Day7 {
 
         while let Some(num) = nums.pop_front() {
             match operators.pop_front().unwrap() {
-                '+' => res += num,
-                '*' => res *= num,
-                _ => (),
+                MyOperators::Add => res += num,
+                MyOperators::Multiply => res *= num,
+                MyOperators::Connect => res = Self::concat(res, num),
             }
         }
 
         res
+    }
+
+    fn get_line_info(&self, line: &str) -> (i128, Vec<i128>) {
+        let (test_value, equation) = line.split_once(": ").unwrap();
+
+        let test_value = test_value.parse::<i128>().unwrap();
+        let equation_numbers: Vec<i128> = equation
+            .split_whitespace()
+            .map(|x| x.parse().unwrap())
+            .collect();
+
+        (test_value, equation_numbers)
+    }
+
+    fn valid_equation_exists(
+        &self,
+        test_value: i128,
+        equation_numbers: Vec<i128>,
+        available_operators: Vec<MyOperators>,
+    ) -> bool {
+        for equation_operators in repeat(available_operators.clone().iter())
+            .take(equation_numbers.len() - 1)
+            .multi_cartesian_product()
+        {
+            if test_value
+                == Self::evaluate_ltr(
+                    equation_numbers.clone().into(),
+                    equation_operators.into_iter().cloned().collect(),
+                )
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 
@@ -30,90 +76,35 @@ impl Solution for Day7 {
         let mut valid_sum = 0;
 
         for line in self.input.split("\n") {
-            let (test_value, equation) = line.split_once(": ").unwrap();
+            let (test_value, equation_numbers) = self.get_line_info(line);
 
-            let test_value = test_value.parse::<i64>().unwrap();
-            let equation_numbers: Vec<i64> = equation
-                .split_whitespace()
-                .map(|x| x.parse().unwrap())
-                .collect();
+            let op = vec![MyOperators::Add, MyOperators::Multiply];
 
-            let op = vec!['*', '+'];
-
-            for equation_operators in repeat(op.clone().iter())
-                .take(equation_numbers.len() - 1)
-                .multi_cartesian_product()
-            {
-                if test_value
-                    == Self::evaluate_ltr(
-                        equation_numbers.clone().into(),
-                        equation_operators.into_iter().cloned().collect(),
-                    )
-                {
-                    valid_sum += test_value;
-                    break;
-                }
+            if self.valid_equation_exists(test_value, equation_numbers, op) {
+                valid_sum += test_value;
             }
         }
 
-        println!("{valid_sum}");
-
-        0
+        valid_sum
     }
 
     fn part2(&self) -> i128 {
         let mut valid_sum = 0;
 
         for line in self.input.split("\n") {
-            let (test_value, equation) = line.split_once(": ").unwrap();
+            let (test_value, equation_numbers) = self.get_line_info(line);
 
-            let test_value = test_value.parse::<i64>().unwrap();
-            let equation_numbers: Vec<i64> = equation
-                .split_whitespace()
-                .map(|x| x.parse().unwrap())
-                .collect();
+            let op = vec![
+                MyOperators::Add,
+                MyOperators::Multiply,
+                MyOperators::Connect,
+            ];
 
-            let op = vec!['*', '+', '|'];
-
-            for equation_operators in repeat(op.clone().iter())
-                .take(equation_numbers.len() - 1)
-                .multi_cartesian_product()
-            {
-                println!("checking {line}");
-
-                let equation_numbers: Vec<i64> = equation_numbers
-                    .clone()
-                    .into_iter()
-                    .zip(equation_operators.clone().into_iter())
-                    .clone()
-                    .flat_map(|(a, b)| vec![a.to_string(), b.to_string()])
-                    .collect::<String>()
-                    .replace("|", "")
-                    .split(|c| c == '+' || c == '*')
-                    .join(" ")
-                    .trim()
-                    .split_whitespace()
-                    .map(|x| x.parse::<i64>().unwrap())
-                    .collect();
-
-                if test_value
-                    == Self::evaluate_ltr(
-                        equation_numbers.clone().into(),
-                        equation_operators
-                            .into_iter()
-                            .cloned()
-                            .filter(|c| *c != '|')
-                            .collect(),
-                    )
-                {
-                    valid_sum += test_value;
-                    break;
-                }
+            if self.valid_equation_exists(test_value, equation_numbers, op) {
+                valid_sum += test_value;
             }
         }
 
-        println!("{}", valid_sum);
-
-        0
+        valid_sum
     }
 }
