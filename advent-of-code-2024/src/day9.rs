@@ -53,8 +53,7 @@ impl Solution for Day9 {
             }
         }
 
-        println!("{}", calculated_checksum);
-        0
+        calculated_checksum
     }
 
     fn part2(&self) -> i128 {
