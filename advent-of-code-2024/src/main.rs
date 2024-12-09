@@ -6,6 +6,8 @@ use day4::Day4;
 use day5::Day5;
 use day6::Day6;
 use day7::Day7;
+use day8::Day8;
+use day9::Day9;
 use std::{env, fs::File, io::Read, path::PathBuf};
 
 mod day1;
@@ -15,6 +17,8 @@ mod day4;
 mod day5;
 mod day6;
 mod day7;
+mod day8;
+mod day9;
 
 fn main() {
     let day_number = env::args()
@@ -54,6 +58,12 @@ fn main() {
             input: input.clone(),
         }),
         Box::new(Day7 {
+            input: input.clone(),
+        }),
+        Box::new(Day8 {
+            input: input.clone(),
+        }),
+        Box::new(Day9 {
             input: input.clone(),
         }),
     ];
