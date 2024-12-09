@@ -6,13 +6,13 @@ pub struct Day4 {
 
 impl Solution for Day4 {
     fn part1(&self) -> i128 {
-        let rows: Vec<Vec<char>> = self
+        let matrix: Vec<Vec<char>> = self
             .input
             .split("\n")
             .map(|x| x.chars().collect())
             .collect();
-        let height = rows.len();
-        let width = rows[0].len();
+        let height = matrix.len();
+        let width = matrix[0].len();
 
         let mut diag_down = String::from("");
         for row_idx in 0..(height - 3) {
@@ -20,10 +20,10 @@ impl Solution for Day4 {
                 diag_down.push_str(
                     format!(
                         "{}{}{}{} ",
-                        rows[row_idx][col_idx],
-                        rows[row_idx + 1][col_idx + 1],
-                        rows[row_idx + 2][col_idx + 2],
-                        rows[row_idx + 3][col_idx + 3]
+                        matrix[row_idx][col_idx],
+                        matrix[row_idx + 1][col_idx + 1],
+                        matrix[row_idx + 2][col_idx + 2],
+                        matrix[row_idx + 3][col_idx + 3]
                     )
                     .as_str(),
                 );
@@ -36,10 +36,10 @@ impl Solution for Day4 {
                 diag_up.push_str(
                     format!(
                         "{}{}{}{} ",
-                        rows[row_idx][col_idx],
-                        rows[row_idx - 1][col_idx + 1],
-                        rows[row_idx - 2][col_idx + 2],
-                        rows[row_idx - 3][col_idx + 3]
+                        matrix[row_idx][col_idx],
+                        matrix[row_idx - 1][col_idx + 1],
+                        matrix[row_idx - 2][col_idx + 2],
+                        matrix[row_idx - 3][col_idx + 3]
                     )
                     .as_str(),
                 );
@@ -52,10 +52,10 @@ impl Solution for Day4 {
                 vertical.push_str(
                     format!(
                         "{}{}{}{} ",
-                        rows[row_idx][col_idx],
-                        rows[row_idx + 1][col_idx],
-                        rows[row_idx + 2][col_idx],
-                        rows[row_idx + 3][col_idx]
+                        matrix[row_idx][col_idx],
+                        matrix[row_idx + 1][col_idx],
+                        matrix[row_idx + 2][col_idx],
+                        matrix[row_idx + 3][col_idx]
                     )
                     .as_str(),
                 );
@@ -75,20 +75,20 @@ impl Solution for Day4 {
     }
 
     fn part2(&self) -> i128 {
-        let rows: Vec<Vec<char>> = self
+        let matrix: Vec<Vec<char>> = self
             .input
             .split("\n")
             .map(|x| x.chars().collect())
             .collect();
-        let height = rows.len();
-        let width = rows[0].len();
+        let height = matrix.len();
+        let width = matrix[0].len();
 
         let mut counter = 0;
         for i in 1..(height - 1) {
             for j in 1..(width - 1) {
-                if rows[i][j] == 'A' {
-                    let bottom_right_diag = format!("{}{}", rows[i - 1][j - 1], rows[i + 1][j + 1]);
-                    let top_right_diag = format!("{}{}", rows[i - 1][j + 1], rows[i + 1][j - 1]);
+                if matrix[i][j] == 'A' {
+                    let bottom_right_diag = format!("{}{}", matrix[i - 1][j - 1], matrix[i + 1][j + 1]);
+                    let top_right_diag = format!("{}{}", matrix[i - 1][j + 1], matrix[i + 1][j - 1]);
 
                     if bottom_right_diag.contains("M")
                         && bottom_right_diag.contains("S")

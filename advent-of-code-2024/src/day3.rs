@@ -40,9 +40,8 @@ impl Solution for Day3 {
                 sum += Self::mul(&dont_section.to_string());
                 continue;
             }
-            match dont_section.split_once("do()") {
-                Some(do_section) => sum += Self::mul(&do_section.1.to_string()),
-                None => continue,
+            if let Some(do_section) = dont_section.split_once("do()") {
+                sum += Self::mul(&do_section.1.to_string());
             }
         }
 
