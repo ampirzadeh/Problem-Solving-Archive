@@ -1,6 +1,5 @@
 use advent_of_code_2024::Solution;
-use itertools::Itertools;
-use std::{collections::VecDeque, iter::repeat};
+use std::i128;
 
 #[derive(Clone, PartialEq, Debug)]
 enum MyOperators {
@@ -14,27 +13,6 @@ pub struct Day7 {
 }
 
 impl Day7 {
-    fn concat(a: i128, b: i128) -> i128 {
-        a as i128 * 10i128.pow(b.ilog10() + 1) + b as i128
-    }
-
-    fn evaluate_ltr(nums: VecDeque<i128>, operators: VecDeque<MyOperators>) -> i128 {
-        let mut nums = nums;
-        let mut operators = operators;
-
-        let mut res = nums.pop_front().unwrap();
-
-        while let Some(num) = nums.pop_front() {
-            match operators.pop_front().unwrap() {
-                MyOperators::Add => res += num,
-                MyOperators::Multiply => res *= num,
-                MyOperators::Connect => res = Self::concat(res, num),
-            }
-        }
-
-        res
-    }
-
     fn get_line_info(&self, line: &str) -> (i128, Vec<i128>) {
         let (test_value, equation) = line.split_once(": ").unwrap();
 
@@ -50,24 +28,54 @@ impl Day7 {
     fn valid_equation_exists(
         &self,
         test_value: i128,
-        equation_numbers: Vec<i128>,
-        available_operators: Vec<MyOperators>,
+        equation_numbers: &Vec<i128>,
+        available_operators: &Vec<MyOperators>,
     ) -> bool {
-        for equation_operators in repeat(available_operators.clone().iter())
-            .take(equation_numbers.len() - 1)
-            .multi_cartesian_product()
-        {
-            if test_value
-                == Self::evaluate_ltr(
-                    equation_numbers.clone().into(),
-                    equation_operators.into_iter().cloned().collect(),
-                )
-            {
-                return true;
-            }
-        }
+        let mut equation_numbers = equation_numbers.clone();
 
-        return false;
+        if let Some(last_number) = equation_numbers.pop() {
+            if available_operators.contains(&MyOperators::Multiply) {
+                if test_value % last_number == 0 {
+                    if self.valid_equation_exists(
+                        test_value / last_number,
+                        &equation_numbers,
+                        available_operators,
+                    ) {
+                        return true;
+                    }
+                }
+            }
+
+            if available_operators.contains(&MyOperators::Add) {
+                if test_value - last_number >= 0 {
+                    if self.valid_equation_exists(
+                        test_value - last_number,
+                        &equation_numbers,
+                        available_operators,
+                    ) {
+                        return true;
+                    }
+                }
+            }
+
+            if available_operators.contains(&MyOperators::Connect) {
+                let last_number_magnitute = 10i128.pow(last_number.ilog10() + 1);
+
+                if test_value % last_number_magnitute == last_number {
+                    if self.valid_equation_exists(
+                        test_value / last_number_magnitute,
+                        &equation_numbers,
+                        available_operators,
+                    ) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        } else {
+            return test_value == 0;
+        }
     }
 }
 
@@ -80,7 +88,7 @@ impl Solution for Day7 {
 
             let op = vec![MyOperators::Add, MyOperators::Multiply];
 
-            if self.valid_equation_exists(test_value, equation_numbers, op) {
+            if self.valid_equation_exists(test_value, &equation_numbers, &op) {
                 valid_sum += test_value;
             }
         }
@@ -100,7 +108,7 @@ impl Solution for Day7 {
                 MyOperators::Connect,
             ];
 
-            if self.valid_equation_exists(test_value, equation_numbers, op) {
+            if self.valid_equation_exists(test_value, &equation_numbers, &op) {
                 valid_sum += test_value;
             }
         }
