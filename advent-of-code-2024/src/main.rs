@@ -1,6 +1,7 @@
 use advent_of_code_2024::Solution;
 use day1::Day1;
 use day10::Day10;
+use day11::Day11;
 use day2::Day2;
 use day3::Day3;
 use day4::Day4;
@@ -13,6 +14,7 @@ use std::{env, fs::File, io::Read, path::PathBuf};
 
 mod day1;
 mod day10;
+mod day11;
 mod day2;
 mod day3;
 mod day4;
@@ -69,6 +71,9 @@ fn main() {
             input: input.clone(),
         }),
         Box::new(Day10 {
+            input: input.clone(),
+        }),
+        Box::new(Day11 {
             input: input.clone(),
         }),
     ];
