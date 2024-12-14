@@ -1,4 +1,4 @@
-use std::ops::{Add, Mul, Sub};
+use std::ops::{Add, Mul, Rem, Sub};
 
 pub trait Solution {
     fn part1(&self) -> i128;
@@ -40,6 +40,17 @@ impl Mul<i128> for Point {
         Point {
             x: self.x * other,
             y: self.y * other,
+        }
+    }
+}
+
+impl Rem for Point {
+    type Output = Self;
+
+    fn rem(self, other: Self) -> Self::Output {
+        Point {
+            x: self.x % other.x,
+            y: self.y % other.y,
         }
     }
 }
