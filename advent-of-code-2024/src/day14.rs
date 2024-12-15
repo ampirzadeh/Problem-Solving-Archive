@@ -79,7 +79,7 @@ impl Solution for Day14 {
         // violets are blue
         // i have not a single clue
         // of what i should do
-        // lol
+        // lol bye
         0
     }
 }
