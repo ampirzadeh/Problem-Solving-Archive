@@ -6,6 +6,10 @@ use day12::Day12;
 use day13::Day13;
 use day14::Day14;
 use day15::Day15;
+use day16::Day16;
+use day17::Day17;
+use day18::Day18;
+use day19::Day19;
 use day2::Day2;
 use day3::Day3;
 use day4::Day4;
@@ -23,6 +27,10 @@ mod day12;
 mod day13;
 mod day14;
 mod day15;
+mod day16;
+mod day17;
+mod day18;
+mod day19;
 mod day2;
 mod day3;
 mod day4;
@@ -94,6 +102,18 @@ fn main() {
             input: input.clone(),
         }),
         Box::new(Day15 {
+            input: input.clone(),
+        }),
+        Box::new(Day16 {
+            input: input.clone(),
+        }),
+        Box::new(Day17 {
+            input: input.clone(),
+        }),
+        Box::new(Day18 {
+            input: input.clone(),
+        }),
+        Box::new(Day19 {
             input: input.clone(),
         }),
     ];
