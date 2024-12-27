@@ -6,10 +6,10 @@ pub struct Day17 {
 
 
 impl Solution for Day17 {
-    fn part1(&self) -> i128 {
+    fn part1(&self) -> String {
         todo!();
     }
-    fn part2(&self) -> i128 {
+    fn part2(&self) -> String {
         todo!();
     }
 }

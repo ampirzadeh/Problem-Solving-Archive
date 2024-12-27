@@ -5,12 +5,8 @@ pub struct Day4 {
 }
 
 impl Solution for Day4 {
-    fn part1(&self) -> i128 {
-        let matrix: Vec<Vec<char>> = self
-            .input
-            .split("\n")
-            .map(|x| x.chars().collect())
-            .collect();
+    fn part1(&self) -> String {
+        let matrix: Vec<Vec<char>> = self.input.lines().map(|x| x.chars().collect()).collect();
         let height = matrix.len();
         let width = matrix[0].len();
 
@@ -71,15 +67,11 @@ impl Solution for Day4 {
         counter += diag_down.matches("SAMX").count();
         counter += self.input.matches("XMAS").count();
         counter += self.input.matches("SAMX").count();
-        counter.try_into().unwrap()
+        counter.to_string()
     }
 
-    fn part2(&self) -> i128 {
-        let matrix: Vec<Vec<char>> = self
-            .input
-            .split("\n")
-            .map(|x| x.chars().collect())
-            .collect();
+    fn part2(&self) -> String {
+        let matrix: Vec<Vec<char>> = self.input.lines().map(|x| x.chars().collect()).collect();
         let height = matrix.len();
         let width = matrix[0].len();
 
@@ -87,8 +79,10 @@ impl Solution for Day4 {
         for i in 1..(height - 1) {
             for j in 1..(width - 1) {
                 if matrix[i][j] == 'A' {
-                    let bottom_right_diag = format!("{}{}", matrix[i - 1][j - 1], matrix[i + 1][j + 1]);
-                    let top_right_diag = format!("{}{}", matrix[i - 1][j + 1], matrix[i + 1][j - 1]);
+                    let bottom_right_diag =
+                        format!("{}{}", matrix[i - 1][j - 1], matrix[i + 1][j + 1]);
+                    let top_right_diag =
+                        format!("{}{}", matrix[i - 1][j + 1], matrix[i + 1][j - 1]);
 
                     if bottom_right_diag.contains("M")
                         && bottom_right_diag.contains("S")
@@ -101,6 +95,6 @@ impl Solution for Day4 {
             }
         }
 
-        counter.try_into().unwrap()
+        counter.to_string()
     }
 }

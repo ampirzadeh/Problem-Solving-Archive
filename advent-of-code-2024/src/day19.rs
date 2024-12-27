@@ -35,7 +35,7 @@ impl Onsen {
 }
 
 impl Solution for Day19 {
-    fn part1(&self) -> i128 {
+    fn part1(&self) -> String {
         let mut lines = self.input.lines();
 
         let towels: Vec<String> = lines
@@ -54,10 +54,10 @@ impl Solution for Day19 {
             }
         }
 
-        valid_pattern_count
+        valid_pattern_count.to_string()
     }
 
-    fn part2(&self) -> i128 {
+    fn part2(&self) -> String {
         let mut lines = self.input.lines();
 
         let towels: Vec<String> = lines
@@ -74,6 +74,6 @@ impl Solution for Day19 {
             valid_pattern_count += o.arrange_count(line);
         }
 
-        valid_pattern_count
+        valid_pattern_count.to_string()
     }
 }

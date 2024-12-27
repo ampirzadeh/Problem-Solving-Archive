@@ -11,7 +11,7 @@ impl Day5 {
         // 47 -> [53, 13, 61]
         let mut precedence_rules: HashMap<&str, Vec<&str>> = HashMap::new();
 
-        for line in self.input.split('\n') {
+        for line in self.input.lines() {
             if let Some((n1, n2)) = line.split_once('|') {
                 precedence_rules
                     .entry(n1)
@@ -47,10 +47,10 @@ impl Day5 {
 }
 
 impl Solution for Day5 {
-    fn part1(&self) -> i128 {
+    fn part1(&self) -> String {
         let mut valid_sum: i128 = 0;
 
-        for line in self.input.split('\n') {
+        for line in self.input.lines() {
             if line.is_empty() || line.contains('|') {
                 continue;
             }
@@ -61,13 +61,13 @@ impl Solution for Day5 {
             }
         }
 
-        valid_sum
+        valid_sum.to_string()
     }
 
-    fn part2(&self) -> i128 {
+    fn part2(&self) -> String {
         let mut valid_sum: i128 = 0;
 
-        for line in self.input.split('\n') {
+        for line in self.input.lines() {
             if line.is_empty() || line.contains('|') {
                 continue;
             }
@@ -108,6 +108,6 @@ impl Solution for Day5 {
             valid_sum += nums[(nums.len() - 1) / 2].parse::<i128>().unwrap();
         }
 
-        valid_sum
+        valid_sum.to_string()
     }
 }

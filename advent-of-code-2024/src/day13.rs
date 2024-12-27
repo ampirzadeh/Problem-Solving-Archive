@@ -32,7 +32,7 @@ impl Day13 {
 }
 
 impl Solution for Day13 {
-    fn part1(&self) -> i128 {
+    fn part1(&self) -> String {
         let mut lines = self.input.lines();
 
         let button_reg = Regex::new(r"X\+(?<x>\d+), Y\+(?<y>\d+)").unwrap();
@@ -71,11 +71,10 @@ impl Solution for Day13 {
             };
         }
 
-        let sum = sum as i64;
-        sum.try_into().unwrap()
+        sum.to_string()
     }
 
-    fn part2(&self) -> i128 {
+    fn part2(&self) -> String {
         let mut lines = self.input.lines();
 
         let button_reg = Regex::new(r"X\+(?<x>\d+), Y\+(?<y>\d+)").unwrap();
@@ -102,10 +101,10 @@ impl Solution for Day13 {
             let Some((a_press_count, b_press_count)) = self.solve_linear_equations(
                 ax,
                 bx,
-                10000000000000.0 * x_goal,
+                10000000000000.0 + x_goal,
                 ay,
                 by,
-                10000000000000.0 * y_goal,
+                10000000000000.0 + y_goal,
             ) else {
                 continue;
             };
@@ -119,7 +118,6 @@ impl Solution for Day13 {
             };
         }
 
-        let sum = sum as i64;
-        sum.try_into().unwrap()
+        sum.to_string()
     }
 }

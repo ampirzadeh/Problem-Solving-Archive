@@ -16,7 +16,7 @@ struct Graph {
 }
 
 impl Solution for Day16 {
-    fn part1(&self) -> i128 {
+    fn part1(&self) -> String {
         let lines = self.input.lines();
 
         let mut g = Graph {
@@ -85,15 +85,15 @@ impl Solution for Day16 {
         //
         //    return dist[], prev[]
 
-        0
+        0.to_string()
     }
 
-    fn part2(&self) -> i128 {
+    fn part2(&self) -> String {
         // roses are red
         // violets are blue
         // i have not a single clue
         // of what i should do
         // lol bye
-        0
+        todo!()
     }
 }

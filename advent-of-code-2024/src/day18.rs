@@ -61,21 +61,23 @@ impl Day18 {
             },
             |p| *p == end_node,
         )
-        .and_then(|f| Some(f.len()))
+        .and_then(|f| Some(f.len() - 1))
     }
 }
 
 impl Solution for Day18 {
-    fn part1(&self) -> i128 {
+    fn part1(&self) -> String {
         let bytes = 1024;
         let max_x = 70;
         let max_y = 70;
 
         let walls = self.get_walls(bytes);
-        self.find_shortest_path(&walls, max_x, max_y).unwrap() as i128 - 1
+        self.find_shortest_path(&walls, max_x, max_y)
+            .unwrap()
+            .to_string()
     }
 
-    fn part2(&self) -> i128 {
+    fn part2(&self) -> String {
         let max_x = 70;
         let max_y = 70;
 
@@ -88,7 +90,11 @@ impl Solution for Day18 {
         while high - low > 1 {
             let middle = (low + high) / 2;
             if self
-                .find_shortest_path(&walls.clone().into_iter().take(middle).collect(), max_x, max_y)
+                .find_shortest_path(
+                    &walls.clone().into_iter().take(middle).collect(),
+                    max_x,
+                    max_y,
+                )
                 .is_none()
             {
                 high = middle;
@@ -97,8 +103,6 @@ impl Solution for Day18 {
             }
         }
 
-        println!("{},{}", walls[low].x, walls[low].y);
-
-        0
+        format!("{},{}", walls[low].x, walls[low].y)
     }
 }

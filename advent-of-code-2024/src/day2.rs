@@ -21,10 +21,10 @@ impl Day2 {
 }
 
 impl Solution for Day2 {
-    fn part1(&self) -> i128 {
+    fn part1(&self) -> String {
         let mut valid_counter = 0;
 
-        for line in self.input.split("\n") {
+        for line in self.input.lines() {
             let report = line
                 .split_whitespace()
                 .map(|x| x.parse::<i128>().unwrap())
@@ -35,14 +35,14 @@ impl Solution for Day2 {
             }
         }
 
-        valid_counter
+        valid_counter.to_string()
     }
 
-    fn part2(&self) -> i128 {
+    fn part2(&self) -> String {
         let mut valid_counter = 0;
 
-        for line in self.input.split("\n") {
-            let report: Vec<i128> = line
+        for line in self.input.lines() {
+            let report = line
                 .split_whitespace()
                 .map(|x| x.parse::<i128>().unwrap())
                 .collect();
@@ -70,6 +70,6 @@ impl Solution for Day2 {
             }
         }
 
-        valid_counter
+        valid_counter.to_string()
     }
 }
