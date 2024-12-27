@@ -1,4 +1,4 @@
-use std::{collections::HashMap, hash::Hash, os::unix::fs::PermissionsExt};
+use std::collections::HashMap;
 
 use advent_of_code_2024::{Point, Solution};
 
@@ -9,7 +9,7 @@ pub struct Day12 {
 impl Day12 {
     fn get_matrix(&self) -> Vec<Vec<char>> {
         self.input
-            .split("\n")
+            .lines()
             .map(|x| x.chars().collect())
             .collect()
     }
@@ -24,7 +24,7 @@ impl Day12 {
 }
 
 impl Solution for Day12 {
-    fn part1(&self) -> i128 {
+    fn part1(&self) -> String {
         let mut areas: HashMap<char, i128> = HashMap::new();
         let mut perimeters: HashMap<char, i128> = HashMap::new();
 
@@ -51,18 +51,18 @@ impl Solution for Day12 {
             }
         }
 
-        println!("areas: {:?}\nperimeters: {:?}", areas, perimeters);
+        //println!("areas: {:?}\nperimeters: {:?}", areas, perimeters);
 
         let mut cost = 0;
 
         for (key, value) in &areas {
             cost += perimeters.get(key).unwrap() * value;
-            println!("cost of {key} is {}", perimeters.get(key).unwrap() * value);
+            //println!("cost of {key} is {}", perimeters.get(key).unwrap() * value);
         }
-        cost
+        cost.to_string()
     }
 
-    fn part2(&self) -> i128 {
-        0
+    fn part2(&self) -> String {
+        todo!();
     }
 }

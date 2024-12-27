@@ -80,10 +80,10 @@ impl Day7 {
 }
 
 impl Solution for Day7 {
-    fn part1(&self) -> i128 {
+    fn part1(&self) -> String {
         let mut valid_sum = 0;
 
-        for line in self.input.split("\n") {
+        for line in self.input.lines() {
             let (test_value, equation_numbers) = self.get_line_info(line);
 
             let op = vec![MyOperators::Add, MyOperators::Multiply];
@@ -93,13 +93,13 @@ impl Solution for Day7 {
             }
         }
 
-        valid_sum
+        valid_sum.to_string()
     }
 
-    fn part2(&self) -> i128 {
+    fn part2(&self) -> String {
         let mut valid_sum = 0;
 
-        for line in self.input.split("\n") {
+        for line in self.input.lines() {
             let (test_value, equation_numbers) = self.get_line_info(line);
 
             let op = vec![
@@ -113,6 +113,6 @@ impl Solution for Day7 {
             }
         }
 
-        valid_sum
+        valid_sum.to_string()
     }
 }

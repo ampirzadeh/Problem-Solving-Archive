@@ -85,20 +85,20 @@ impl Solution for Day11 {
     // the mathematical proof is quite fun and simple once you know it happens
     // so a hashmap of 54 keys is the way to go
 
-    fn part1(&self) -> i128 {
+    fn part1(&self) -> String {
         let mut blinker = Blinker {
             stones: self.get_frequency_map(),
         };
         let stones = blinker.nth(24).unwrap();
-        stones.into_iter().map(|(_, repeats)| repeats).sum()
+        stones.into_iter().map(|(_, repeats)| repeats).sum::<i128>().to_string()
     }
 
-    fn part2(&self) -> i128 {
+    fn part2(&self) -> String {
         let mut blinker = Blinker {
             stones: self.get_frequency_map(),
         };
 
         let stones = blinker.nth(74).unwrap();
-        stones.into_iter().map(|(_, repeats)| repeats).sum()
+        stones.into_iter().map(|(_, repeats)| repeats).sum::<i128>().to_string()
     }
 }

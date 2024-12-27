@@ -1,8 +1,8 @@
 use std::ops::{Add, Mul, Rem, Sub};
 
 pub trait Solution {
-    fn part1(&self) -> i128;
-    fn part2(&self) -> i128;
+    fn part1(&self) -> String;
+    fn part2(&self) -> String;
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]

@@ -17,11 +17,11 @@ impl Day1 {
 }
 
 impl Solution for Day1 {
-    fn part1(&self) -> i128 {
+    fn part1(&self) -> String {
         let mut first_set: Vec<i128> = Vec::new();
         let mut second_set: Vec<i128> = Vec::new();
 
-        for line in self.input.split("\n") {
+        for line in self.input.lines() {
             let nums = Self::get_numbers(line);
 
             first_set.push(nums.0);
@@ -36,14 +36,14 @@ impl Solution for Day1 {
             sum += (first_set[i]).abs_diff(second_set[i]);
         }
 
-        sum.try_into().unwrap()
+        sum.to_string()
     }
 
-    fn part2(&self) -> i128 {
+    fn part2(&self) -> String {
         let mut first_set: Vec<i128> = Vec::new();
         let mut second_set: Vec<i128> = Vec::new();
 
-        for line in self.input.split("\n") {
+        for line in self.input.lines() {
             let nums = Self::get_numbers(line);
 
             first_set.push(nums.0);
@@ -62,6 +62,6 @@ impl Solution for Day1 {
             sum += num * frequency_map.get(&num).unwrap_or(&0i128);
         }
 
-        sum
+        sum.to_string()
     }
 }

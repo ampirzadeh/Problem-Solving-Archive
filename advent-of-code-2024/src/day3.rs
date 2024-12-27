@@ -27,11 +27,11 @@ impl Day3 {
 }
 
 impl Solution for Day3 {
-    fn part1(&self) -> i128 {
-        Self::mul(&self.input)
+    fn part1(&self) -> String {
+        Self::mul(&self.input).to_string()
     }
 
-    fn part2(&self) -> i128 {
+    fn part2(&self) -> String {
         let mut sum = 0;
 
         let dont_sections: Vec<&str> = self.input.split("don't()").collect();
@@ -45,6 +45,6 @@ impl Solution for Day3 {
             }
         }
 
-        sum
+        sum.to_string()
     }
 }

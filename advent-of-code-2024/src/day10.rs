@@ -11,7 +11,7 @@ pub struct Day10 {
 impl Day10 {
     fn get_matrix(&self) -> Vec<Vec<i128>> {
         self.input
-            .split("\n")
+            .lines()
             .map(|x| {
                 x.chars()
                     .map(|ch| ch.to_digit(10).unwrap() as i128)
@@ -56,7 +56,7 @@ impl Day10 {
 }
 
 impl Solution for Day10 {
-    fn part1(&self) -> i128 {
+    fn part1(&self) -> String {
         let mut nines_reached: Vec<Point> = vec![];
 
         for (row, roww) in self.get_matrix().iter().enumerate() {
@@ -72,10 +72,10 @@ impl Solution for Day10 {
             }
         }
 
-        nines_reached.len().try_into().unwrap()
+        nines_reached.len().to_string()
     }
 
-    fn part2(&self) -> i128 {
+    fn part2(&self) -> String {
         let mut nines_reached: Vec<Point> = vec![];
 
         for (row, roww) in self.get_matrix().iter().enumerate() {
@@ -88,6 +88,6 @@ impl Solution for Day10 {
             }
         }
 
-        nines_reached.len().try_into().unwrap()
+        nines_reached.len().to_string()
     }
 }

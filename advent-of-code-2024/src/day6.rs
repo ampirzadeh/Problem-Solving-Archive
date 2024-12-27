@@ -108,7 +108,7 @@ impl Day6 {
 }
 
 impl Solution for Day6 {
-    fn part1(&self) -> i128 {
+    fn part1(&self) -> String {
         let matrix = self.get_matrix();
         let (starting_pos, starting_dir) = self.get_starting_info();
 
@@ -118,11 +118,10 @@ impl Solution for Day6 {
             .unique_by(|f| f.0)
             .collect_vec()
             .len()
-            .try_into()
-            .unwrap()
+            .to_string()
     }
 
-    fn part2(&self) -> i128 {
+    fn part2(&self) -> String {
         let matrix = self.get_matrix();
         let height = matrix.len();
         let width = matrix[0].len();
@@ -142,6 +141,6 @@ impl Solution for Day6 {
             }
         }
 
-        timeloop_counter
+        timeloop_counter.to_string()
     }
 }

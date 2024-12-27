@@ -5,7 +5,7 @@ pub struct Day9 {
 }
 
 impl Solution for Day9 {
-    fn part1(&self) -> i128 {
+    fn part1(&self) -> String {
         let mut decompressed_string: Vec<String> = vec![];
 
         let mut current_file_id = 0;
@@ -14,7 +14,7 @@ impl Solution for Day9 {
         let freespace = ".".to_string();
 
         for chr in self.input.chars() {
-            let n: usize = chr.to_digit(10).unwrap().try_into().unwrap();
+            let n = chr.to_digit(10).unwrap() as usize;
 
             let current_character: String = if current_file_type {
                 current_file_id.to_string()
@@ -53,10 +53,10 @@ impl Solution for Day9 {
             }
         }
 
-        calculated_checksum
+        calculated_checksum.to_string()
     }
 
-    fn part2(&self) -> i128 {
-        1
+    fn part2(&self) -> String {
+        todo!()
     }
 }

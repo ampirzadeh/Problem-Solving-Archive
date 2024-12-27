@@ -13,7 +13,7 @@ impl Day14 {
     }
 }
 impl Solution for Day14 {
-    fn part1(&self) -> i128 {
+    fn part1(&self) -> String {
         let lines = self.input.lines();
 
         let mut robot_position_tracker: HashMap<Point, i128> = HashMap::new();
@@ -71,15 +71,15 @@ impl Solution for Day14 {
             }
         }
 
-        bottom_left * bottom_right * top_left * top_right
+        (bottom_left * bottom_right * top_left * top_right).to_string()
     }
 
-    fn part2(&self) -> i128 {
+    fn part2(&self) -> String {
         // roses are red
         // violets are blue
         // i have not a single clue
         // of what i should do
         // lol bye
-        0
+        todo!()
     }
 }

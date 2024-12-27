@@ -73,7 +73,7 @@ impl Warehouse {
 }
 
 impl Solution for Day15 {
-    fn part1(&self) -> i128 {
+    fn part1(&self) -> String {
         let mut warehouse = Warehouse {
             robot: Point::new(0, 0),
             boxes: vec![],
@@ -103,15 +103,15 @@ impl Solution for Day15 {
             gps_score += (b.y) * 100 + (b.x);
         }
 
-        gps_score
+        gps_score.to_string()
     }
 
-    fn part2(&self) -> i128 {
+    fn part2(&self) -> String {
         // roses are red
         // violets are blue
         // i have not a single clue
         // of what i should do
         // lol bye
-        0
+        todo!()
     }
 }

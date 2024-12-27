@@ -22,7 +22,7 @@ impl Day8 {
                     continue;
                 }
 
-                let pos = Point::new(i.try_into().unwrap(), j.try_into().unwrap());
+                let pos = Point::new(i as i128, j as i128);
                 frequency_station_mapper
                     .entry(chr)
                     .and_modify(|x| {
@@ -105,14 +105,10 @@ impl Day8 {
 }
 
 impl Solution for Day8 {
-    fn part1(&self) -> i128 {
-        let matrix: Vec<Vec<char>> = self
-            .input
-            .split("\n")
-            .map(|x| x.chars().collect())
-            .collect();
-        let height: i128 = matrix.len().try_into().unwrap();
-        let width: i128 = matrix[0].len().try_into().unwrap();
+    fn part1(&self) -> String {
+        let matrix: Vec<Vec<char>> = self.input.lines().map(|x| x.chars().collect()).collect();
+        let height = matrix.len() as i128;
+        let width = matrix[0].len() as i128;
 
         let mut antinode_locations: HashSet<Point> = HashSet::new();
 
@@ -124,17 +120,13 @@ impl Solution for Day8 {
             }
         }
 
-        antinode_locations.len().try_into().unwrap()
+        antinode_locations.len().to_string()
     }
 
-    fn part2(&self) -> i128 {
-        let matrix: Vec<Vec<char>> = self
-            .input
-            .split("\n")
-            .map(|x| x.chars().collect())
-            .collect();
-        let height: i128 = matrix.len().try_into().unwrap();
-        let width: i128 = matrix[0].len().try_into().unwrap();
+    fn part2(&self) -> String {
+        let matrix: Vec<Vec<char>> = self.input.lines().map(|x| x.chars().collect()).collect();
+        let height = matrix.len() as i128;
+        let width = matrix[0].len() as i128;
 
         let mut antinode_locations: HashSet<Point> = HashSet::new();
 
@@ -146,6 +138,6 @@ impl Solution for Day8 {
             }
         }
 
-        antinode_locations.len().try_into().unwrap()
+        antinode_locations.len().to_string()
     }
 }
