@@ -18,6 +18,24 @@ impl Day3 {
 
         (idx, val)
     }
+
+    fn find_max_joltage(pack: &str, n: usize) -> u128 {
+        let digits = pack
+            .chars()
+            .map(|f| f.to_digit(10).unwrap())
+            .collect::<Vec<u32>>();
+
+        let mut res = 0u128;
+        let mut last_max_idx = 0;
+        for i in 1..=n {
+            let available_digits = digits[last_max_idx..digits.len() - n + i].to_vec();
+            let (max_idx, max_val) = Self::find_max(available_digits);
+            last_max_idx += max_idx + 1;
+            res = res * 10 + max_val as u128;
+        }
+
+        res
+    }
 }
 
 impl Solution for Day3 {
@@ -25,23 +43,26 @@ impl Solution for Day3 {
         let mut sum = 0;
 
         for line in self.input.lines() {
-            let digits = line
-                .chars()
-                .map(|f| f.to_digit(10).unwrap())
-                .collect::<Vec<u32>>();
+            sum += Day3::find_max_joltage(line, 2);
 
-            let mut max_combo = vec![0, 0];
-            for i in 0..digits.len() {
-                if digits[i] > max_combo[1] {
-                    max_combo[1] = digits[i];
-                }
-                if digits[i] > max_combo[0] && i != digits.len() - 1 {
-                    max_combo[0] = digits[i];
-                    max_combo[1] = 0;
-                }
-            }
-
-            sum += max_combo[0] * 10 + max_combo[1];
+            // My initial solution:
+            // let digits = line
+            //     .chars()
+            //     .map(|f| f.to_digit(10).unwrap())
+            //     .collect::<Vec<u32>>();
+            //
+            // let mut max_combo = vec![0, 0];
+            // for i in 0..digits.len() {
+            //     if digits[i] > max_combo[1] {
+            //         max_combo[1] = digits[i];
+            //     }
+            //     if digits[i] > max_combo[0] && i != digits.len() - 1 {
+            //         max_combo[0] = digits[i];
+            //         max_combo[1] = 0;
+            //     }
+            // }
+            //
+            // sum += max_combo[0] * 10 + max_combo[1];
         }
 
         sum.to_string()
@@ -51,23 +72,7 @@ impl Solution for Day3 {
         let mut sum = 0;
 
         for line in self.input.lines() {
-            let digits = line
-                .chars()
-                .map(|f| f.to_digit(10).unwrap())
-                .collect::<Vec<u32>>();
-
-            let n = 12;
-
-            let mut res = 0u128;
-            let mut last_max_idx = 0;
-            for i in 1..=n {
-                let available_digits = digits[last_max_idx..digits.len() - n + i].to_vec();
-                let (max_idx, max_val) = Self::find_max(available_digits);
-                last_max_idx += max_idx + 1;
-                res = res * 10 + max_val as u128;
-            }
-
-            sum += res;
+            sum += Self::find_max_joltage(line, 12);
         }
 
         sum.to_string()
