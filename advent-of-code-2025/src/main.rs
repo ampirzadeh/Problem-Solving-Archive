@@ -20,7 +20,6 @@ fn file(day_number: usize) -> String {
     let path = PathBuf::from(format!("src/data/day{}.txt", day_number));
     let input: String = fs::read_to_string(path)
         .expect("Error reading file content")
-        .trim()
         .to_string();
     return input;
 }
