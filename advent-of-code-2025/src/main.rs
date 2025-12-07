@@ -5,6 +5,7 @@ use day3::Day3;
 use day4::Day4;
 use day5::Day5;
 use day6::Day6;
+use day7::Day7;
 use std::{
     env,
     fs::{self},
@@ -17,6 +18,7 @@ mod day3;
 mod day4;
 mod day5;
 mod day6;
+mod day7;
 
 fn file(day_number: usize) -> String {
     let path = PathBuf::from(format!("src/data/day{}.txt", day_number));
@@ -27,13 +29,14 @@ fn file(day_number: usize) -> String {
 }
 
 fn main() {
-    let solutions: [Box<dyn Solution>; 6] = [
+    let solutions: [Box<dyn Solution>; 7] = [
         Box::new(Day1 { input: file(1) }),
         Box::new(Day2 { input: file(2) }),
         Box::new(Day3 { input: file(3) }),
         Box::new(Day4 { input: file(4) }),
         Box::new(Day5 { input: file(5) }),
         Box::new(Day6 { input: file(6) }),
+        Box::new(Day7 { input: file(7) }),
     ];
 
     match env::args()
