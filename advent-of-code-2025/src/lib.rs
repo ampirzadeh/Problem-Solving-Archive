@@ -6,57 +6,62 @@ pub trait Solution {
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub struct Point {
-    pub x: i128,
-    pub y: i128,
+pub struct Vector3d {
+    pub x: i64,
+    pub y: i64,
+    pub z: i64,
 }
 
-impl Add for Point {
+impl Add for Vector3d {
     type Output = Self;
 
     fn add(self, other: Self) -> Self::Output {
-        Point {
+        Vector3d {
             x: self.x + other.x,
             y: self.y + other.y,
+            z: self.z + other.z,
         }
     }
 }
 
-impl Sub for Point {
+impl Sub for Vector3d {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self::Output {
-        Point {
+        Vector3d {
             x: self.x - other.x,
             y: self.y - other.y,
+            z: self.z - other.z,
         }
     }
 }
 
-impl Mul<i128> for Point {
+impl Mul<i64> for Vector3d {
     type Output = Self;
 
-    fn mul(self, other: i128) -> Self::Output {
-        Point {
+    fn mul(self, other: i64) -> Self::Output {
+        Vector3d {
             x: self.x * other,
             y: self.y * other,
+            z: self.z * other,
         }
     }
 }
 
-impl Rem for Point {
+impl Rem for Vector3d {
     type Output = Self;
 
     fn rem(self, other: Self) -> Self::Output {
-        Point {
+        Vector3d {
             x: self.x % other.x,
             y: self.y % other.y,
+            z: self.y % other.y,
         }
     }
 }
 
-impl Point {
-    pub fn new(x: i128, y: i128) -> Self {
-        Self { x, y }
+impl Vector3d {
+    pub fn new(x: i64, y: i64, z: i64) -> Self {
+        Self { x, y, z }
     }
 }
