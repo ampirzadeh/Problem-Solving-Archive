@@ -7,8 +7,12 @@
 // So I decided to use an iterator instead to only calculate the insertion of the new pair. This
 // removed the need for manual intervention but it meant that I couldn't get the n smallest pairs
 // at once using select_nth_unstable_by_key, and had to do it one by one which affected performance
+//
+// Update: I thought of using a Binary Heap to get the smallest pairs 10 minutes after writing
+// about the decreased performance so I gave it a go (instead of a HashMap) and it fixed all the
+// performance issues! 0.81s for both parts :)
 
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use advent_of_code_2025::{Solution, Vector3d};
 use itertools::Itertools;
@@ -18,7 +22,7 @@ pub struct Day8 {
 }
 
 type Circuits = Vec<Vec<usize>>;
-type DistanceMap = HashMap<(usize, usize), i64>;
+type DistanceMap = BTreeMap<i64, (usize, usize)>;
 
 struct CircuitTracker {
     pub distance_map: DistanceMap,
@@ -30,16 +34,9 @@ impl Iterator for CircuitTracker {
     type Item = Circuits;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let min_distance: ((usize, usize), i64);
-
-        if let Some(((p1, p2), distance)) = self.distance_map.iter().min_by_key(|x| x.1) {
-            min_distance = ((*p1, *p2), *distance);
-            self.distance_map.remove(&(*p1, *p2));
-        } else {
+        let Some((_, (p1, p2))) = self.distance_map.pop_first() else {
             return None;
-        }
-
-        let ((p1, p2), _d) = min_distance;
+        };
 
         self.last_pair = Some((p1, p2));
 
@@ -103,9 +100,11 @@ impl Day8 {
     fn get_distance_map(points: &Vec<Vector3d>) -> DistanceMap {
         // This is basically a matrix of distances, except the matrix would have been symmetric and
         // so would have wasted memory
-        // key: indices of source and destination in points[]
-        // value: distance between the points
-        let mut distance_map: DistanceMap = HashMap::new();
+        // I used a HashMap at first but it was too slow
+        //
+        // key: distance between the points
+        // value: indices of source and destination in points[]
+        let mut distance_map: DistanceMap = BTreeMap::new();
         // build the distance map
         for i in 0..points.len() {
             for j in i + 1..points.len() {
@@ -113,7 +112,7 @@ impl Day8 {
                 let dy = points[i].y - points[j].y;
                 let dz = points[i].z - points[j].z;
                 let sum = dx.pow(2) + dy.pow(2) + dz.pow(2);
-                distance_map.insert((i, j), sum);
+                distance_map.insert(sum, (i, j));
             }
         }
 
@@ -160,8 +159,6 @@ impl Solution for Day8 {
             // if the first circuit contains all the points
             if circuits[0].len() == points.len() {
                 let last = circuit_tracker.last_pair.unwrap();
-                println!("{:?}", last);
-                println!("{:?}, {:?}", points[last.0], points[last.1]);
                 return (points[last.0].x * points[last.1].x).to_string();
             }
         }
