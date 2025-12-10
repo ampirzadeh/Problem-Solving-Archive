@@ -1,4 +1,12 @@
 // I LOVE RUST PATTERN MATCHING
+//
+// My initial solution for part 1 was actually faster than my final solution but it required
+// manually changing the number of pairs to take for part 2
+// I tried having an increasing for loop for the number of pairs to take but it was too slow as it
+// was calculating everything before it every time a new pair was being added
+// So I decided to use an iterator instead to only calculate the insertion of the new pair. This
+// removed the need for manual intervention but it meant that I couldn't get the n smallest pairs
+// at once using select_nth_unstable_by_key, and had to do it one by one which affected performance
 
 use std::collections::HashMap;
 
@@ -11,6 +19,68 @@ pub struct Day8 {
 
 type Circuits = Vec<Vec<usize>>;
 type DistanceMap = HashMap<(usize, usize), i64>;
+
+struct CircuitTracker {
+    pub distance_map: DistanceMap,
+    pub circuits: Circuits,
+    pub last_pair: Option<(usize, usize)>,
+}
+
+impl Iterator for CircuitTracker {
+    type Item = Circuits;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let min_distance: ((usize, usize), i64);
+
+        if let Some(((p1, p2), distance)) = self.distance_map.iter().min_by_key(|x| x.1) {
+            min_distance = ((*p1, *p2), *distance);
+            self.distance_map.remove(&(*p1, *p2));
+        } else {
+            return None;
+        }
+
+        let ((p1, p2), _d) = min_distance;
+
+        self.last_pair = Some((p1, p2));
+
+        // add p1 and p2 to circuits appropriately
+        // Find circuits containing p1 or p2
+        let c1_index = self.circuits.iter().position(|c| c.contains(&p1));
+        let c2_index = self.circuits.iter().position(|c| c.contains(&p2));
+
+        // PATTERN MATCHING IS GREAT
+        match (c1_index, c2_index) {
+            // neither is in any circuit so create a new circuit
+            (None, None) => {
+                self.circuits.push(vec![p1, p2]);
+            }
+
+            // p1 is already in a circuit, add p2 to that circuit
+            (Some(i), None) => {
+                self.circuits[i].push(p2);
+            }
+
+            // p2 is already in a circuit, add p1 to that circuit
+            (None, Some(i)) => {
+                self.circuits[i].push(p1);
+            }
+
+            // each is in different circuits so merge two circuits
+            (Some(i1), Some(i2)) if i1 != i2 => {
+                // Ensure i1 < i2 to avoid swapping issues
+                let (low, high) = if i1 < i2 { (i1, i2) } else { (i2, i1) };
+
+                let mut circuit2 = self.circuits.remove(high); // to avoid duplicated points
+                self.circuits[low].append(&mut circuit2);
+            }
+
+            // Only remaining scenario is when both are in the same circuit
+            _ => {}
+        }
+
+        Some(self.circuits.clone())
+    }
+}
 
 impl Day8 {
     fn get_points(input: &String) -> Vec<Vector3d> {
@@ -49,80 +119,22 @@ impl Day8 {
 
         distance_map
     }
-    fn get_circuits(
-        distance_map: &DistanceMap,
-        pairs_to_take_count: usize,
-        points: &Vec<Vector3d>,
-    ) -> Circuits {
-        // wanted_pairs is an iterator of the n smallest pairs after they're sorted by distance
-        //
-        // My initial Solution:
-        // let wanted_pairs = distance_map
-        //     .iter()
-        //     .sorted_by_key(|x| x.1)
-        //     .take(pairs_to_take_count);
-        //
-        // Much better performance as it doesn't sort the whole distance_map
-        let mut items: Vec<_> = distance_map.iter().collect();
-        if items.len() > pairs_to_take_count {
-            items.select_nth_unstable_by_key(pairs_to_take_count, |x| x.1);
-        }
-        let wanted_pairs = items[..pairs_to_take_count].iter();
-
-        let mut circuits: Circuits = vec![];
-
-        // add p1 and p2 to circuits appropriately
-        for ((p1, p2), _d) in wanted_pairs {
-            // Find circuits containing p1 or p2
-            let c1_index = circuits.iter().position(|c| c.contains(p1));
-            let c2_index = circuits.iter().position(|c| c.contains(p2));
-
-            // println!(
-            //     "adding {p1} and {p2} which are points in circuits {:?} and {:?}",
-            //     points[*p1], points[*p2]
-            // );
-            // PATTERN MATCHING IS GREAT
-            match (c1_index, c2_index) {
-                // neither is in any circuit so create a new circuit
-                (None, None) => {
-                    circuits.push(vec![*p1, *p2]);
-                }
-
-                // p1 is already in a circuit, add p2 to that circuit
-                (Some(i), None) => {
-                    circuits[i].push(*p2);
-                }
-
-                // p2 is already in a circuit, add p1 to that circuit
-                (None, Some(i)) => {
-                    circuits[i].push(*p1);
-                }
-
-                // each is in different circuits so merge two circuits
-                (Some(i1), Some(i2)) if i1 != i2 => {
-                    // Ensure i1 < i2 to avoid swapping issues
-                    let (low, high) = if i1 < i2 { (i1, i2) } else { (i2, i1) };
-
-                    let mut circuit2 = circuits.remove(high); // to avoid duplicated points
-                    circuits[low].append(&mut circuit2);
-                }
-
-                // Only remaining scenario is when both are in the same circuit
-                _ => {}
-            }
-        }
-
-        circuits
-    }
 }
 
 impl Solution for Day8 {
     fn part1(&self) -> String {
-        const PAIRS_TO_TAKE_COUNT: usize = 10;
+        const PAIRS_TO_TAKE_COUNT: usize = 1000;
 
         let points = Self::get_points(&self.input);
         let distance_map = Self::get_distance_map(&points);
-        let circuits = Self::get_circuits(&distance_map, PAIRS_TO_TAKE_COUNT, &points);
+
+        let mut circuit_tracker = CircuitTracker {
+            distance_map,
+            circuits: vec![],
+            last_pair: None,
+        };
+
+        let circuits = circuit_tracker.nth(PAIRS_TO_TAKE_COUNT - 1).unwrap();
 
         circuits
             .iter()
@@ -135,31 +147,22 @@ impl Solution for Day8 {
     }
 
     fn part2(&self) -> String {
-        let mut pair_count = 3580;
-
         let points = Self::get_points(&self.input);
         let distance_map = Self::get_distance_map(&points);
 
-        let mut circuits;
-        loop {
-            circuits = Self::get_circuits(&distance_map, pair_count, &points);
+        let mut circuit_tracker = CircuitTracker {
+            distance_map,
+            circuits: vec![],
+            last_pair: None,
+        };
 
-            let a = distance_map
-                .iter()
-                .sorted_by_key(|x| x.1)
-                .nth(pair_count - 1)
-                .unwrap()
-                .to_owned();
-            println!(
-                "ADDING {} AND {} WHICH ARE POINTS IN CIRCUITS {:?} AND {:?} -> {}",
-                a.0 .0, a.0 .1, points[a.0 .0], points[a.0 .1], points[a.0 .0].x * points[a.0 .1].x
-            );
-
-            pair_count += 1;
-            println!("{} {}", pair_count, circuits.len());
-
-            if circuits.len() == 1 {
-                break;
+        while let Some(circuits) = circuit_tracker.next() {
+            // if the first circuit contains all the points
+            if circuits[0].len() == points.len() {
+                let last = circuit_tracker.last_pair.unwrap();
+                println!("{:?}", last);
+                println!("{:?}, {:?}", points[last.0], points[last.1]);
+                return (points[last.0].x * points[last.1].x).to_string();
             }
         }
 
