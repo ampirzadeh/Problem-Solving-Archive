@@ -1,5 +1,7 @@
 use advent_of_code_2025::Solution;
 use day1::Day1;
+use day10::Day10;
+use day11::Day11;
 use day2::Day2;
 use day3::Day3;
 use day4::Day4;
@@ -8,7 +10,6 @@ use day6::Day6;
 use day7::Day7;
 use day8::Day8;
 use day9::Day9;
-use day10::Day10;
 use std::{
     env,
     fs::{self},
@@ -16,6 +17,8 @@ use std::{
 };
 
 mod day1;
+mod day10;
+mod day11;
 mod day2;
 mod day3;
 mod day4;
@@ -24,7 +27,6 @@ mod day6;
 mod day7;
 mod day8;
 mod day9;
-mod day10;
 
 fn file(day_number: usize) -> String {
     let path = PathBuf::from(format!("src/data/day{}.txt", day_number));
@@ -35,7 +37,7 @@ fn file(day_number: usize) -> String {
 }
 
 fn main() {
-    let solutions: [Box<dyn Solution>; 10] = [
+    let solutions: [Box<dyn Solution>; 11] = [
         Box::new(Day1 { input: file(1) }),
         Box::new(Day2 { input: file(2) }),
         Box::new(Day3 { input: file(3) }),
@@ -46,6 +48,7 @@ fn main() {
         Box::new(Day8 { input: file(8) }),
         Box::new(Day9 { input: file(9) }),
         Box::new(Day10 { input: file(10) }),
+        Box::new(Day11 { input: file(11) }),
     ];
 
     match env::args()
